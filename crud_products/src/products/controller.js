@@ -26,13 +26,18 @@ const postProduct = (req, res) => {
             console.error("Erro ao inserir o produto:", error);
             res.status(500).json({ error: "Erro ao inserir o produto." });
         } else {
-            res.status(201).json(results.rows[0]); // Retorna o produto recém-criado
+            res.status(201).json(results.rows[0]); 
         }
     });
+};
+
+const deleteProduct = (req, res) => {
+
 };
 
 module.exports = {
     getProducts,
     getUniqueProduct,
-    postProduct
+    postProduct,
+    deleteProduct
 };
