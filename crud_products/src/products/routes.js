@@ -10,5 +10,9 @@ router.get('/:id', controller.getUniqueProduct);
 
 router.post('/postProduct', controller.postProduct);
 
+router.put('/:id', controller.putProduct);
+
+router.delete('/:id', controller.deleteProduct)
+
 
 module.exports = router;

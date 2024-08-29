@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-// Usa as rotas definidas no arquivo 'routes.js'
+
 app.use('/api/v1/products', productRoutes);
 
 app.listen(port, () => console.log(`App listening on port ${port}`));
