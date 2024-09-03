@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
     res.send("Hello World!");
 });
 
+/*
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/books', bookRoutes);
 app.use('/api/v1/carts', cartRoutes);
@@ -26,5 +27,5 @@ app.use('/api/v1/orderitems', orderitemRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
-
+*/
 app.listen(port, () => console.log(`App listening on port ${port}`));
