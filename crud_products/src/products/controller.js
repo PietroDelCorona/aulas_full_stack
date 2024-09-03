@@ -2,21 +2,45 @@ const pool = require('../../db.js');
 
 const getProducts = (req, res) => {
     pool.query("SELECT * FROM products", (error, results) => {
-        if (error) throw error;
+        if (error){
+            console.error("Erro ao buscar os produtos:", error);
+            return res.status(500).json({ error: "Erro ao buscar os produtos."})
+        }
         res.status(200).json(results.rows);
     })
 };
 
 const getUniqueProduct = (req, res) => {
     const id = req.params.id; 
+
+    if (!id || isNaN(id) || parseInt(id) <= 0) {
+        return res.status(400).json({ error: "O 'id' deve ser um número positivo e válido." });
+    }
+
     pool.query("SELECT * FROM products WHERE id = $1", [id], (error, results) => {
-        if (error) throw error;
+        if (error){
+            console.error("Erro ao buscar o produto:", error);
+            return res.status(500).json({ error: "Erro ao buscar os produtos."})
+        }
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: "Produto não encontrado." });
+        }
+
         res.status(200).json(results.rows);
     }); 
 };
 
 const postProduct = (req, res) => {
     const { id, name, price } = req.body;
+
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(400).json({ error: "O 'name' não pode ser vazio e deve ser uma string válida." });
+    }
+
+    if (price == null || price <= 0) {
+        return res.status(400).json({ error: "O 'price' deve ser um número positivo e maior que zero." });
+    }
 
     const query = "INSERT INTO products (id, name, price) VALUES ($1, $2, $3) RETURNING *";
     const values = [id, name, price];
@@ -34,6 +58,15 @@ const postProduct = (req, res) => {
 const putProduct = (req,res) => {
     const id = req.params.id;
     const { name, price } = req.body;
+
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(400).json({ error: "O 'name' não pode ser vazio e deve ser uma string válida." });
+    }
+
+    if (price == null || price <= 0) {
+        return res.status(400).json({ error: "O 'price' deve ser um número positivo e maior que zero." });
+    }
+
     const query = `
         UPDATE products
         SET name = $1, price = $2
@@ -55,6 +88,11 @@ const putProduct = (req,res) => {
 
 const deleteProduct = (req, res) => {
     const id = req.params.id;
+
+    if (!id || isNaN(id) || parseInt(id) <= 0) {
+        return res.status(400).json({ error: "O 'id' deve ser um número positivo e válido." });
+    }
+
     pool.query("DELETE FROM products WHERE id = $1", [id], (error, results) => {
         if (error) {
             console.error("Erro ao deletar o produto:", error);
