@@ -32,7 +32,7 @@ const getUniqueProduct = (req, res) => {
 };
 
 const postProduct = (req, res) => {
-    const { id, name, price } = req.body;
+    const { id, name, price, category } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({ error: "O 'name' não pode ser vazio e deve ser uma string válida." });
@@ -42,8 +42,12 @@ const postProduct = (req, res) => {
         return res.status(400).json({ error: "O 'price' deve ser um número positivo e maior que zero." });
     }
 
-    const query = "INSERT INTO products (id, name, price) VALUES ($1, $2, $3) RETURNING *";
-    const values = [id, name, price];
+    if (!category || typeof category !== 'string' || category.trim() === '') {
+        return res.status(400).json({ error: "A 'category' não pode ser vazia e deve ser uma string válida." });
+    }
+
+    const query = "INSERT INTO products (id, name, price, category) VALUES ($1, $2, $3, $4) RETURNING *";
+    const values = [id, name, price, category];
 
     pool.query(query, values, (error, results) => {
         if (error) {
@@ -67,13 +71,17 @@ const putProduct = (req,res) => {
         return res.status(400).json({ error: "O 'price' deve ser um número positivo e maior que zero." });
     }
 
+    if (!category || typeof category !== 'string' || category.trim() === '') {
+        return res.status(400).json({ error: "A 'category' não pode ser vazia e deve ser uma string válida." });
+    }
+
     const query = `
         UPDATE products
-        SET name = $1, price = $2
-        WHERE id = $3
+        SET name = $1, price = $2, category = $3
+        WHERE id = $4
         RETURNING *;
     `;
-    const values = [name, price, id];
+    const values = [name, price, category, id];
     pool.query(query, values, (error, results) => {
         if (error) {
             console.error("Erro ao atualizar o produto:", error);
