@@ -2,3 +2,4 @@ node_modules
 crud_products/package-lock.json
 site_bookstore/package-lock.json
 .env
+strapi_quickstart
